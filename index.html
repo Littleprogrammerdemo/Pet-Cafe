@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kawaii Pet Café 🐾</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .float-item {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.7;
+            animation: floatAround 8s ease-in-out infinite;
+        }
+        
+        @keyframes floatAround {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, -30px) rotate(90deg); }
+            50% { transform: translate(-20px, -60px) rotate(180deg); }
+            75% { transform: translate(-40px, -20px) rotate(270deg); }
+        }
+        
+        .header {
+            text-align: center;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.8); }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .pet-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+            transition: all 0.4s ease;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pet-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, #ff9a9e, #fecfef, #fecfef, #ff9a9e);
+            animation: rotate 4s linear infinite;
+            z-index: -1;
+        }
+        
+        .pet-card::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 27px;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+        
+        .pet-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+        
+        .pet-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .pet-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .pet-mood {
+            font-size: 1.1rem;
+            color: #f093fb;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .pet-activity {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            color: #8b5a3c;
+            display: inline-block;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .pet-activity:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .menu-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 3rem;
+            margin: 3rem 0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .menu-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .menu-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .menu-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.3rem;
+        }
+        
+        .menu-price {
+            font-size: 1rem;
+            color: #f093fb;
+            font-weight: 600;
+        }
+        
+        .interactive-zone {
+            text-align: center;
+            margin: 4rem 0;
+        }
+        
+        .feed-button {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            border: none;
+            padding: 1.5rem 3rem;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #8b5a3c;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 15px 40px rgba(255, 154, 158, 0.4);
+            margin: 0.5rem;
+        }
+        
+        .feed-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255, 154, 158, 0.6);
+        }
+        
+        .happiness-meter {
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .happiness-bar {
+            width: 300px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            margin: 1rem auto;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .happiness-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a9e, #fecfef, #a8edea);
+            width: 75%;
+            border-radius: 25px;
+            transition: width 0.5s ease;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: 200px 0; }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .pets-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .menu-section {
+                padding: 2rem;
+            }
+            
+            .happiness-bar {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements" id="floatingElements"></div>
+    
+    <div class="header">
+        <h1>🐾 Kawaii Pet Café 🐾</h1>
+        <div class="subtitle">Where adorable friends come to play! ✨</div>
+    </div>
+    
+    <div class="container">
+        <div class="pets-grid">
+            <div class="pet-card">
+                <span class="pet-emoji">🐱</span>
+                <div class="pet-name">Mochi</div>
+                <div class="pet-mood">Feeling sleepy~</div>
+                <div class="pet-activity" onclick="petInteraction(this, '🐱')">Give belly rubs</div>
+            </div>
+            
+            <div class="pet-card">
+                <span class="pet-emoji">🐶</span>
+                <div class="pet-name">Biscuit</div>
+                <div class="pet-mood">Super playful!</div>
+                <div class="pet-activity" onclick="petInteraction(this, '🐶')">Throw tennis ball</div>
+            </div>
+            
+            <div class="pet-card">
+                <span class="pet-emoji">🐰</span>
+                <div class="pet-name">Marshmallow</div>
+                <div class="pet-mood">Hopping around</div>
+                <div class="pet-activity" onclick="petInteraction(this, '🐰')">Share some carrots</div>
+            </div>
+            
+            <div class="pet-card">
+                <span class="pet-emoji">🐹</span>
+                <div class="pet-name">Peanut</div>
+                <div class="pet-mood">Building nest</div>
+                <div class="pet-activity" onclick="petInteraction(this, '🐹')">Watch wheel spinning</div>
+            </div>
+            
+            <div class="pet-card">
+                <span class="pet-emoji">🐦</span>
+                <div class="pet-name">Kiwi</div>
+                <div class="pet-mood">Singing songs</div>
+                <div class="pet-activity" onclick="petInteraction(this, '🐦')">Listen to chirps</div>
+            </div>
+            
+            <div class="pet-card">
+                <span class="pet-emoji">🐢</span>
+                <div class="pet-name">Sage</div>
+                <div class="pet-mood">Taking it slow</div>
+                <div class="pet-activity" onclick="petInteraction(this, '🐢')">Gentle head pats</div>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <div class="menu-title">🍰 Café Treats 🍰</div>
+            <div class="menu-grid">
+                <div class="menu-item">
+                    <div class="menu-emoji">🧁</div>
+                    <div class="menu-name">Paw-print Cupcakes</div>
+                    <div class="menu-price">$4.50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-emoji">🍪</div>
+                    <div class="menu-name">Kitty Cookies</div>
+                    <div class="menu-price">$3.25</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-emoji">☕</div>
+                    <div class="menu-name">Puppy Latte</div>
+                    <div class="menu-price">$5.75</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-emoji">🥛</div>
+                    <div class="menu-name">Bunny Milk Tea</div>
+                    <div class="menu-price">$4.00</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-emoji">🍰</div>
+                    <div class="menu-name">Rainbow Cake</div>
+                    <div class="menu-price">$6.50</div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-emoji">🍨</div>
+                    <div class="menu-name">Fluffy Ice Cream</div>
+                    <div class="menu-price">$3.75</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interactive-zone">
+            <button class="feed-button" onclick="feedAllPets()">🍎 Feed All Pets</button>
+            <button class="feed-button" onclick="playTime()">🎾 Playtime!</button>
+            <button class="feed-button" onclick="napTime()">😴 Nap Time</button>
+            
+            <div class="happiness-meter">
+                <div style="color: white; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;">
+                    Café Happiness Level ✨
+                </div>
+                <div class="happiness-bar">
+                    <div class="happiness-fill" id="happinessBar"></div>
+                </div>
+                <div style="color: rgba(255,255,255,0.8); margin-top: 0.5rem;" id="happinessText">
+                    Everyone is having a wonderful time! 🌟
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Come back anytime for cuddles and treats! 💕<br>
+        Open daily 9AM - 9PM ✨
+    </div>
+
+    <script>
+        let happinessLevel = 75;
+        
+        // Create floating elements
+        function createFloatingElements() {
+            const container = document.getElementById('floatingElements');
+            const elements = ['🌸', '⭐', '✨', '🎈', '🦋', '🌙', '☁️', '🌺'];
+            
+            for (let i = 0; i < 12; i++) {
+                const element = document.createElement('div');
+                element.className = 'float-item';
+                element.innerHTML = elements[Math.floor(Math.random() * elements.length)];
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = Math.random() * 100 + '%';
+                element.style.animationDelay = Math.random() * 8 + 's';
+                element.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                container.appendChild(element);
+            }
+        }
+        
+        function petInteraction(button, petEmoji) {
+            const responses = [
+                `${petEmoji} *purrs happily*`,
+                `${petEmoji} *wags tail excitedly*`,
+                `${petEmoji} *gives you loving eyes*`,
+                `${petEmoji} *nuzzles your hand*`,
+                `${petEmoji} *does a happy dance*`
+            ];
+            
+            const originalText = button.innerHTML;
+            button.innerHTML = responses[Math.floor(Math.random() * responses.length)];
+            button.style.background = 'linear-gradient(135deg, #a8edea, #fed6e3)';
+            
+            increaseHappiness(5);
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(135deg, #ffeaa7, #fab1a0)';
+            }, 2000);
+        }
+        
+        function feedAllPets() {
+            const petEmojis = document.querySelectorAll('.pet-emoji');
+            petEmojis.forEach((emoji, index) => {
+                setTimeout(() => {
+                    emoji.style.transform = 'scale(1.3)';
+                    setTimeout(() => {
+                        emoji.style.transform = 'scale(1)';
+                    }, 300);
+                }, index * 200);
+            });
+            
+            increaseHappiness(15);
+            showMessage("All pets are well fed and happy! 🍎✨");
+        }
+        
+        function playTime() {
+            const cards = document.querySelectorAll('.pet-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.transform = 'translateY(-20px) rotate(5deg)';
+                    setTimeout(() => {
+                        card.style.transform = 'translateY(0) rotate(0deg)';
+                    }, 400);
+                }, index * 100);
+            });
+            
+            increaseHappiness(10);
+            showMessage("Playtime is the best time! Everyone's having fun! 🎾🎉");
+        }
+        
+        function napTime() {
+            const petMoods = document.querySelectorAll('.pet-mood');
+            const originalMoods = Array.from(petMoods).map(mood => mood.innerHTML);
+            
+            petMoods.forEach(mood => {
+                mood.innerHTML = "Sleeping peacefully... 😴";
+                mood.style.color = '#a8edea';
+            });
+            
+            increaseHappiness(8);
+            showMessage("Shhh... everyone is taking a cozy nap! 😴💤");
+            
+            setTimeout(() => {
+                petMoods.forEach((mood, index) => {
+                    mood.innerHTML = originalMoods[index];
+                    mood.style.color = '#f093fb';
+                });
+                showMessage("Nap time over! Everyone's refreshed! ✨");
+            }, 4000);
+        }
+        
+        function increaseHappiness(amount) {
+            happinessLevel = Math.min(100, happinessLevel + amount);
+            const bar = document.getElementById('happinessBar');
+            const text = document.getElementById('happinessText');
+            
+            bar.style.width = happinessLevel + '%';
+            
+            if (happinessLevel >= 90) {
+                text.innerHTML = "Maximum happiness achieved! 🌟🎉";
+            } else if (happinessLevel >= 70) {
+                text.innerHTML = "Everyone is having a wonderful time! 🌟";
+            } else if (happinessLevel >= 50) {
+                text.innerHTML = "Good vibes all around! 😊";
+            } else {
+                text.innerHTML = "The pets could use some love! 💕";
+            }
+        }
+        
+        function showMessage(message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 1rem 2rem;
+                border-radius: 25px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                font-weight: 600;
+                color: #667eea;
+                z-index: 1000;
+                animation: slideIn 0.5s ease-out;
+            `;
+            messageDiv.innerHTML = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.style.animation = 'slideOut 0.5s ease-in';
+                setTimeout(() => {
+                    document.body.removeChild(messageDiv);
+                }, 500);
+            }, 3000);
+        }
+        
+        // Add CSS for message animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize
+        createFloatingElements();
+        
+        // Random happiness decay
+        setInterval(() => {
+            if (happinessLevel > 20) {
+                happinessLevel = Math.max(20, happinessLevel - 1);
+                document.getElementById('happinessBar').style.width = happinessLevel + '%';
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
